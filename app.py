@@ -5,12 +5,14 @@ from config import config
 import os
 from routes.form import form_blueprint
 from routes.user import user_blueprint
+from routes.statistics import stats_blueprint
 
 app = Flask(__name__)
 CORS(app)
 
 app.register_blueprint(form_blueprint, url_prefix="/api/v1/form")
 app.register_blueprint(user_blueprint, url_prefix="/api/v1/user")
+app.register_blueprint(stats_blueprint, url_prefix="/api/v1/stats")
 
 
 @app.route("/")

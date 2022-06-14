@@ -16,7 +16,7 @@ def save_form_submission():
     data = request.get_json()
     template_id = data["template-id"]
     submission = data["submission"]
-    public_address = ""  # TODO
+    public_address = data["public_address"]
     submission_id = save_submission(
         template_id=template_id, submission=submission, public_address=public_address
     )
@@ -40,8 +40,7 @@ def get_all_submissions():
 def save_template():
     data = request.get_json()
     template = data["template"]
-
-    public_address = ""  # TODO
+    public_address = data["public_address"]  # TODO
     template_id = save_new_template(public_address=public_address, template=template)
     return jsonify({"template_id": template_id}), 200
 

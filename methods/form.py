@@ -6,26 +6,23 @@ from typing import List
 from bson import json_util
 
 from db import submission_db, form_db
+from enums.form_enums import DocumentType, SubmissionStatus
 from utils.utils import get_random_string
 
 
-class DocumentType(str, Enum):
-    submission = "submission"
-    template = "template"
-    user = "user"
-
-
 def save_submission(template_id: str, submission: object, public_address: str) -> str:
-    submission_id = submission_db.submission.insert_one(
+    submission_id = generate_doc_id(DocumentType.submission)
+    submission_db.submission.insert_one(
         {
             "type": DocumentType.submission,
             "submission": submission,
-            "submission_id": generate_doc_id(DocumentType.submission),
+            "submission_id": submission_id,
             "public_address": public_address,
             "template_id": template_id,
             "created_at": datetime.datetime.utcnow(),
+            "status": SubmissionStatus.submitted
         }
-    ).inserted_id
+    )
 
     return str(submission_id)
 
@@ -76,3 +73,18 @@ def get_templates_by_id(template_ids: List[str]) -> List[object]:
 
 def generate_doc_id(document_type: DocumentType) -> str:
     return document_type + ":" + get_random_string(10)
+
+
+def get_template_count() -> int:
+    result = form_db.templates.count_documents({})
+    return result
+
+
+def get_submission_count() -> int:
+    result = submission_db.submission.count_documents({})
+    return result
+
+
+def get_user_count() -> int:
+    result = len(submission_db.submission.distinct('public_address'))
+    return result

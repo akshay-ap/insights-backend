@@ -8,7 +8,7 @@ docker run --rm -it --name mongodb -p 27016:27017 -e MONGO_INITDB_ROOT_USERNAME=
 ```
 
 ```bash
-pip install flask pymongo python-dotenv black
+pip install flask pymongo python-dotenv black web3
 ```
 
 ## Bump version
