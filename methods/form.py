@@ -27,6 +27,15 @@ def save_submission(template_id: str, submission: object, public_address: str) -
     return str(submission_id)
 
 
+def mark_submission_claimable(submission_id):
+    submission_db.submission.update_one(
+        {"submission_id": submission_id, "type": DocumentType.submission},
+        {
+            "$set": {"status": SubmissionStatus.claimable}
+        }
+    )
+
+
 def get_all_submissions_by_template(template_id: str) -> [object]:
     cursor = submission_db.submission.find(
         {"template_id": template_id, "type": DocumentType.submission}
@@ -59,6 +68,15 @@ def save_new_template(public_address: str, template: object) -> str:
     return template_id
 
 
+def update_template(template_id: str, nft_address: str) -> None:
+    form_db.templates.update_one(
+        {"template_id": template_id},
+        {
+            "$set": {"nft_address": nft_address, "updated_at": datetime.datetime.utcnow()}
+        }
+    )
+
+
 def get_templates_by_id(template_ids: List[str]) -> List[object]:
     cursor = form_db.templates.find(
         {"template_id": {"$in": template_ids}, "type": DocumentType.template},
@@ -69,6 +87,23 @@ def get_templates_by_id(template_ids: List[str]) -> List[object]:
         doc["created_at"] = doc["created_at"].isoformat()  # This does the trick!
         data.append(doc)
     return data
+
+
+def get_nft_address(template_id: str) -> str:
+    result = form_db.templates.find_one(
+        {"template_id": template_id, "type": DocumentType.template}
+    )
+    return result.get("nft_address", None)
+
+
+def update_user_submission_status(nft_address: str, public_address: str, transaction_hash: str, submission_id: str):
+    form_db.submission.update_one(
+        {"submission_id": submission_id, "public_address": public_address},
+        {
+            "$set": {"transaction_hash": transaction_hash, "updated_at": datetime.datetime.utcnow(),
+                     "status": SubmissionStatus.claimed}
+        }
+    )
 
 
 def generate_doc_id(document_type: DocumentType) -> str:

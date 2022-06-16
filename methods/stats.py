@@ -44,18 +44,39 @@ def get_user_submission_list(public_address: str) -> List[object]:
                 'public_address': public_address
             }
         }, {
+            '$lookup': {
+                'from': 'templates',
+                'localField': 'template_id',
+                'foreignField': 'template_id',
+                'as': 'template'
+            }
+        }, {
             '$project': {
                 'created_at': 1,
                 '_id': 0,
                 'status': 1,
                 'reward': 1,
-                'template_id': 1
+                'template_id': 1,
+                'template': 1,
+                'submission_id': 1
+            }
+        }, {
+            '$sort': {
+                'created_at': -1
             }
         }
     ])
 
     data = []
     for r in db_result:
-        data.append(r)
+        data.append({
+            'created_at': r['created_at'],
+            'nft_address': r['template'][0]['nft_address'],
+            'reward': r['template'][0].get('reward'),
+            'name': r['template'][0]['template']['name'],
+            'status': r['status'],
+            'reward-token-address': r['template'][0]['template']['erc20TokenAddress'],
+            'id': r['submission_id']
+        })
 
     return data
