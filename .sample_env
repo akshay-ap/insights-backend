@@ -1,1 +1,6 @@
 MONGODB_URI="mongodb://user:password@localhost:27016/default_db?authSource=admin"
+ORACLE_PRIVATE_KEY=private_key
+ORACLE_PUBLIC_ADDRESS=public_address
+CHAIN_ID=1337
+ERC721_FACTORY=0x11eC3070DCe2f3503599C7083d0431D1849560bb
+NETWORK_ADDRESS=http://localhost:7545

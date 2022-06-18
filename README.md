@@ -16,3 +16,17 @@ pip install flask pymongo python-dotenv black web3
 ```bash
 $ bump2version --current-version 0.0.1 --no-tag patch setup.py 
 ```
+
+## Docker
+
+### Build container
+
+```bash
+docker build . -f Dockerfile -t insights-backend
+```
+
+### Run container
+
+```bash
+docker run --rm -it --name insights -p 8080:5000 -v $PWD/.env:/home/appuser/app/.env insights-backend
+```
