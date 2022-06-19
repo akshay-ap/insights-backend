@@ -14,10 +14,11 @@ RUN chown -R appuser /home/appuser
 USER appuser
 WORKDIR /home/appuser/app
 
+COPY --chown=appuser . .
 RUN echo 'alias pip3.9="python3.9 -m pip"' >> ~/.bashrc
 RUN python3.9 -m pip install -r requirements.txt
 
-COPY --chown=appuser . .
+
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 

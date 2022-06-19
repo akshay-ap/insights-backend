@@ -58,7 +58,8 @@ def get_user_submission_list(public_address: str) -> List[object]:
                 'reward': 1,
                 'template_id': 1,
                 'template': 1,
-                'submission_id': 1
+                'submission_id': 1,
+                'transaction_hash': 1
             }
         }, {
             '$sort': {
@@ -76,7 +77,8 @@ def get_user_submission_list(public_address: str) -> List[object]:
             'name': r['template'][0]['template']['name'],
             'status': r['status'],
             'reward-token-address': r['template'][0]['template']['erc20TokenAddress'],
-            'id': r['submission_id']
+            'id': r['submission_id'],
+            'transaction_hash': r.get('transaction_hash')
         })
 
     return data
