@@ -123,3 +123,11 @@ def get_submission_count() -> int:
 def get_user_count() -> int:
     result = len(submission_db.submission.distinct('public_address'))
     return result
+
+
+def get_reward(template_id: str) -> int:
+    result = form_db.templates.find_one(
+        {"template_id": template_id, "type": DocumentType.template}
+    )
+    template = result.get("template", None)
+    return template.get("rewardPerSubmission", 0)

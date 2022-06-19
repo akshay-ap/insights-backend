@@ -3,7 +3,7 @@ import json
 from config import config
 
 
-def update_to_claimable(nft_address: str, public_address: str) -> (bool, str):
+def update_to_claimable(nft_address: str, public_address: str, reward: int) -> (bool, str):
     try:
         with open("abi/erc721.json") as f:
             info_json = json.load(f)
@@ -14,7 +14,7 @@ def update_to_claimable(nft_address: str, public_address: str) -> (bool, str):
             nft_contract = web3.eth.contract(address=nft_address, abi=abi)
             oracle_address = config["ORACLE_PUBLIC_ADDRESS"]
             nonce = web3.eth.get_transaction_count(oracle_address)
-            tx = nft_contract.functions.updateClaimable(public_address, 1).buildTransaction(
+            tx = nft_contract.functions.updateClaimable(public_address, reward).buildTransaction(
                 {
                     'from': oracle_address,
                     "gasPrice": web3.eth.gas_price,

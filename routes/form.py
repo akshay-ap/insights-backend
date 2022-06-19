@@ -6,6 +6,7 @@ from methods.form import (
     get_all_submissions_by_template,
     save_new_template,
     get_templates_by_id, update_template, get_nft_address, mark_submission_claimable, update_user_submission_status,
+    get_reward,
 )
 from methods.nft_interaction import update_to_claimable
 
@@ -25,7 +26,8 @@ def save_form_submission():
 
     nft_address = get_nft_address(template_id)
     if nft_address is not None:
-        (success, hash) = update_to_claimable(nft_address, public_address)
+        reward = get_reward(template_id)
+        (success, hash) = update_to_claimable(nft_address, public_address, reward)
         if success:
             mark_submission_claimable(submission_id)
     return (
